@@ -99,14 +99,88 @@ types:
         contents: [0xA5, 0xA5, 0xA5]
     
   fx_rack_entry:
-    seq:
-      - id: unk1
+    enums:
+      patch:
+        0: unassigned
+        1: insert
+        2: mixreturn
+        3: chreturn
+      waveform: # used for lfo select (no manual) and flange type
+        0x8000: sine
+        0x8010: m
+        0x8020: w
+        0x8030: saw
+        0x8040: manual
+      emulation:
+        0x8010: ambient
+        0x8020: vintage
+        0x8030: wild
+      gatedverb:
+        0x8000: classic
+        0x8010: panner
+        0x8020: power
+      
+    seq: # probably need to ID types of FX and add a switch for different param (not all used)
+      - id: unk1 # fx id/type? used internally to determine DSP? similar fx have same ID (maybe v1 and v2 as well)
         size: 2
       - id: name
         type: str
         size: 20
-      - id: unk_params
-        size: 52
+      - id: lfcut_rev_hpfin_delay_lfosinerect_chorus_flangetype_flanger_lfoselect_phaser_predelay_gatedverb
+        type: u2
+      - id: hfcut_rev_lpfin_delay_monolfosplit_chorus_stereosplit_flanger_monosplit_phaser_type_gatedverb
+        type: u2
+      - id: predelay_rev_fbfreq_delay_rate_chorus_speed_flanger_rate_phaser_frequency_symph_attack_gatedverb
+        type: u2
+      - id: decaytime_rev_fbslope_delay_thickness_adt_depth_chorus_depth_flanger_depth_symph_hold_gatedverb
+        type: u2
+      - id: hfdecay_rev_scatter_delay_wire_adt_monowide_chorus_stereospread_flanger_release_gatedverb
+        type: u2
+      - id: hfslope_rev_tapleft_delay_delayseparation_adt_monomultivoice_chorus_regenerate_flanger_monostereowide_gatedverb
+        type: u2
+      - id: diffusion_rev_link_delay_doublequadtrack_adt_diffusion_gatedverb
+        type: u2
+      - id: size_rev_tapright_delay_speed_adt_mixresonance_phaser_locut_gatedverb
+        type: u2
+      - id: shapedecaydelay_rev_feedback_delay_depth_adt_panspeed_chorus_hicut_gatedverb
+        type: u2
+      - id: refdetail_rev_width_delay_pandepth_chorus
+        type: u2
+      - id: echo1
+        type: u2
+      - id: echo1level_rev_emulationtype_flanger
+        type: u2
+      - id: echo2_rev_speedmanual_flanger_resonantstages_phaser
+        type: u2
+      - id: echo2level_rev_phasingstages_phaser
+        type: u2
+      - id: bodydiffusion_rev_depth_phaser
+        type: u2
+      - id: taildiffusion_rev_offset_phaser
+        type: u2
+      - id: moddepth
+        type: u2
+      - id: modspeed
+        type: u2
+      - id: lfdecay
+        type: u2
+      - id: lfxover
+        type: u2
+      - id: colour
+        type: u2
+      - id: colourfreq
+        type: u2
+      - id: reflevel
+        type: u2
+      - id: decaylevel
+        type: u2
+      - id: patchtype
+        type: u1
+        enum: patch
+      - id: patchinput
+        type: u1
+      - id: unk_end
+        contents: [0x16, 0x00]
     
   channel_entry:
     seq:
