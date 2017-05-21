@@ -80,20 +80,77 @@ seq:
     size: 24
   - id: sect9_end
     type: section_end
-  - id: sect10
-    size: 48
-  - id: sect10_end
+  - id: softkeys
+    type: softkey
+    repeat: expr
+    repeat-expr: 16
+  - id: softkeys_end
     type: section_end
-  - id: sect11
-    size: 168
-  - id: sect11_end
+  - id: unk1
+    size: 45
+    #contents: [1, 1, 1, 0, 1, 2, 4, 1, 1, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 0x25, 0x25, 0x25, 0x25, 0x25, 0x25, 0x25, 0x25, 0x25, 0x25, 0x25, 0x25]
+  - id: usb_patch
+    type: u1
+    repeat: expr
+    repeat-expr: 32
+  - id: unk2
+    contents: [0x00]
+    repeat: expr
+    repeat-expr: 32
+  - id: usb_insert_do
+    size: 1
+  - id: unk3
+    contents: [0xFF]
+    repeat: expr
+    repeat-expr: 18
+  - id: surface_patch
+    type: u1
+    repeat: expr
+    repeat-expr: 32
+  - id: unk4
+    contents: [0xFF]
+    repeat: expr
+    repeat-expr: 8
+  - id: patching_end
     type: section_end
   - id: sect12unk1
-    size: 3208
+    size: 2464
+  - id: dsnake_out_patching
+    type: u1
+    repeat: expr
+    repeat-expr: 12
+  - id: dsnake_out_expander_patching
+    type: u1
+    repeat: expr
+    repeat-expr: 8
+  - id: monitor_patching
+    type: u1
+    repeat: expr
+    repeat-expr: 40
+  - id: unk5
+    contents: [0x00, 0x00, 0x00, 0x00]
+  - id: dcas
+    type: dca
+    repeat: expr
+    repeat-expr: 4
+  - id: unused_dca
+    type: dca
+    repeat: expr
+    repeat-expr: 12
+  - id: mutegroups
+    type: mutegroup
+    repeat: expr
+    repeat-expr: 4
+  - id: sect12unk2
+    size: 420
   - id: amm
     type: amm
-  - id: sect12unk2
-    size: 816
+  - id: sect12unk3
+    contents: [0x00]
+    repeat: expr
+    repeat-expr: 815
+  - id: sect12unk4
+    size: 1 # seems to be either 0x0 or 0x255 (maybe depends on if show scene or not?)
   - id: sect12_end
     type: section_end
   - id: crc
@@ -148,6 +205,34 @@ types:
         type: u2
         repeat: expr
         repeat-expr: 32
+    
+  softkey:
+    seq:
+      - id: function
+        type: u1
+      - id: target
+        type: u2
+    
+  dca:
+    seq:
+      - id: level
+        type: u2
+      - id: unk # could be mute/unmute byte?
+        size: 2
+        #contents: [0x00, 0xA5]
+      - id: name
+        type: str
+        size: 6
+      - id: unk2
+        contents: [0x00, 0x00, 0x00, 0xFF]
+    
+  mutegroup:
+    seq:
+      - id: name
+        type: str
+        size: 6
+      - id: unk
+        contents: [0x00, 0x00, 0x00]
     
   routing_entry:
     seq:
@@ -318,8 +403,10 @@ types:
         size: 1
       - id: d_snake_on_off
         type: u1
+      - id: mutegroup_assignment
+        type: u2
       - id: unk8
-        size: 4
+        size: 2
       - id: linked
         type: u1
       - id: unk9
@@ -330,7 +417,7 @@ types:
         type: u1
       - id: unk10
         size: 2
-      - id: d_snake_gain
+      - id: dsnake_gain
         type: u2
       - id: unk11
         size: 1
@@ -340,10 +427,12 @@ types:
         type: str
         size: 6
       - id: unk12
-        size: 6
+        size: 4
+      - id: dcagroup_assignment
+        type: u2
       - id: ducker
         type: ducker
-      - id: number
+      - id: dsnake_input_number
         type: u1
       - id: unk13
         size: 8
