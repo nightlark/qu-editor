@@ -10,10 +10,42 @@ seq:
     type: header
   - id: header_end
     type: section_end
-  - id: chan
+  - id: inputs
     type: channel_entry
     repeat: expr
-    repeat-expr: 60
+    repeat-expr: 32
+  - id: stereo_inputs
+    type: channel_entry
+    repeat: expr
+    repeat-expr: 3
+  - id: fx_returns
+    type: channel_entry
+    repeat: expr
+    repeat-expr: 4
+  - id: mixes
+    type: channel_entry
+    repeat: expr
+    repeat-expr: 7
+  - id: lr
+    type: channel_entry
+  - id: groups
+    type: channel_entry
+    repeat: expr
+    repeat-expr: 4
+  - id: matrices
+    type: channel_entry
+    repeat: expr
+    repeat-expr: 2
+  - id: chan12
+    type: channel_entry
+    repeat: expr
+    repeat-expr: 2
+  - id: fx_sends
+    type: channel_entry
+    repeat: expr
+    repeat-expr: 4
+  - id: chan3
+    type: channel_entry
   - id: channel_end
     type: section_end
   - id: fx_rack
@@ -22,9 +54,11 @@ seq:
     repeat-expr: 4
   - id: fx_rack_end
     type: section_end
-  - id: sect4
-    size: 9600
-  - id: sect4_end
+  - id: routing
+    type: routing_entry
+    repeat: expr
+    repeat-expr: 60
+  - id: routing_end
     type: section_end
   - id: sect5
     size: 0
@@ -54,8 +88,12 @@ seq:
     size: 168
   - id: sect11_end
     type: section_end
-  - id: sect12
-    size: 4096
+  - id: sect12unk1
+    size: 3208
+  - id: amm
+    type: amm
+  - id: sect12unk2
+    size: 816
   - id: sect12_end
     type: section_end
   - id: crc
@@ -98,6 +136,58 @@ types:
       - id: terminator
         contents: [0xA5, 0xA5, 0xA5]
     
+  amm:
+    seq:
+      - id: lpfilter
+        type: u2
+      - id: hpfilter
+        type: u2
+      - id: unk
+        size: 4
+      - id: gains
+        type: u2
+        repeat: expr
+        repeat-expr: 32
+    
+  routing_entry:
+    seq:
+      - id: mixes
+        type: route
+        repeat: expr
+        repeat-expr: 7
+      - id: lr
+        type: route
+      - id: groups
+        type: route
+        repeat: expr
+        repeat-expr: 4
+      - id: matrices
+        type: route
+        repeat: expr
+        repeat-expr: 2
+      - id: unk # same as extra 2 items that are unknown in channels section
+        type: route
+        repeat: expr
+        repeat-expr: 2
+      - id: fx_sends
+        type: route
+        repeat: expr
+        repeat-expr: 4
+        
+    types:
+      route:
+        seq:
+          - id: gain
+            type: u2
+          - id: pan
+            type: u2
+          - id: pre_on_off
+            type: u1
+          - id: on_off
+            type: u1
+          - id: unused
+            contents: [0xFF, 0xFF]
+    
   fx_rack_entry:
     enums:
       patch:
@@ -121,7 +211,7 @@ types:
         0x8020: power
       
     seq: # probably need to ID types of FX and add a switch for different param (not all used)
-      - id: unk1 # fx id/type? used internally to determine DSP? similar fx have same ID (maybe v1 and v2 as well)
+      - id: unk_type # fx id/type? used internally to determine DSP? similar fx have same ID (maybe v1 and v2 as well)
         size: 2
       - id: name
         type: str
