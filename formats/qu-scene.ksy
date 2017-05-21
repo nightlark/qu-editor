@@ -201,7 +201,7 @@ types:
         type: u2
       - id: unk
         size: 4
-      - id: gains
+      - id: priorities
         type: u2
         repeat: expr
         repeat-expr: 32
