@@ -68,16 +68,22 @@ seq:
     size: 4
   - id: sect6_end
     type: section_end
+    # Section 7 - contains some pafl settings
+  - id: additive_pafl #nvdata
+    type: u1
   - id: sect7
-    size: 12
+    size: 11
   - id: sect7_end
     type: section_end
   - id: sect8
     size: 24
   - id: sect8_end
     type: section_end
+    # Section 9 - contains some siggen settings 
+  - id: siggen_type
+    type: u1
   - id: sect9
-    size: 24
+    size: 23
   - id: sect9_end
     type: section_end
   - id: softkeys
@@ -114,7 +120,12 @@ seq:
   - id: patching_end
     type: section_end
   - id: sect12unk1
-    size: 2464
+    size: 2461
+    # 0x59C0 - 5EB2: contained in this area is global filter and safe stuff, and seemingly individual scene filters. exact format unkonwn. maybe also individual scene filters? #nvdata
+  - id: midi_daw_channel #nvdata
+    type: u1
+  - id: sect12unk2
+    contents: [0x01, 0x00]
   - id: dsnake_out_patching
     type: u1
     repeat: expr
@@ -141,15 +152,21 @@ seq:
     type: mutegroup
     repeat: expr
     repeat-expr: 4
-  - id: sect12unk2
+  - id: sect12unk3
     size: 420
   - id: amm
     type: amm
-  - id: sect12unk3
+  - id: sect12unk4
+    contents: [0x00, 0x00]
+  - id: footswitches #nvdata
+    type: u2
+    repeat: expr
+    repeat-expr: 4
+  - id: sect12unk5
     contents: [0x00]
     repeat: expr
-    repeat-expr: 815
-  - id: sect12unk4
+    repeat-expr: 805
+  - id: sect12unk6
     size: 1 # seems to be either 0x0 or 0x255 (maybe depends on if show scene or not?)
   - id: sect12_end
     type: section_end
@@ -161,7 +178,9 @@ types:
   header:
     seq:
       - id: magic
-        contents: [0xA1, 0x00, 0xFE]
+        #contents: [0xA1, 0x00, 0xFE]
+        #contents: [181, 0x00, 0xFE]
+        size: 3
       - id: id
         type: u1
       - id: version
