@@ -153,20 +153,26 @@ seq:
     repeat: expr
     repeat-expr: 4
   - id: sect12unk3
-    size: 420
+    size: 37
+  - id: qucontroltabs
+    type: qu_control_tab
+    repeat: expr
+    repeat-expr: 5
+  - id: sect12unk4
+    size: 18
   - id: amm
     type: amm
-  - id: sect12unk4
+  - id: sect12unk5
     contents: [0x00, 0x00]
   - id: footswitches #nvdata
     type: u2
     repeat: expr
     repeat-expr: 4
-  - id: sect12unk5
+  - id: sect12unk6
     contents: [0x00]
     repeat: expr
     repeat-expr: 805
-  - id: sect12unk6
+  - id: sect12unk7
     size: 1 # seems to be either 0x0 or 0x255 (maybe depends on if show scene or not?)
   - id: sect12_end
     type: section_end
@@ -252,7 +258,44 @@ types:
         size: 6
       - id: unk
         contents: [0x00, 0x00, 0x00]
-    
+  
+  qu_control_control:
+    seq:
+      # 0=Unassigned; 1=Input Fader; 10=LR On/Off; 11=On/Off Radio; 2=Master Fader Mute; 3=Input Mute
+      # 4=Master Mute; 5=Mute Group; e=SoftKey
+      # 6=Send Level; 7=Send On/Off; 8=Send On/Off Radio
+      # f=Group Send Level; 9=Group On/Off; a=Group On/Off Radio
+      # b=Matrix Send Level; c=Matrix Send On/Off; d=Matrix Send On/Off Radio
+      - id: type
+        type: u1
+        # Inputs: 0-1f=ch1-32; 20-22=st1-3; 23-26=fxret1-4
+        # Masters: 27-2a=mix1-4; 2b-2d=mix5-10; 2e=lr; 2f-32=grp1-8; 37-3a=fxsend1-4; 33-34=mtx1-4; cd-d0=dca1-4
+        # - Sends: Mix1-10, FX Send 1-4
+        # - Group Sends: Grps1-8
+        # - Matrix Sends: Mtx1-4
+        # 0-3=mute groups
+        # 0-e=soft keys
+      - id: target
+        type: u1
+      - id: destination
+        type: u1
+      - id: unk
+        contents: [0xff]
+
+  qu_control_tab:
+    seq:
+      - id: controls
+        type: qu_control_control
+        repeat: expr
+        repeat-expr: 15
+      - id: name
+        type: str
+        size: 8
+      - id: unk
+        contents: [0x0]
+        repeat: expr
+        repeat-expr: 5
+
   routing_entry:
     seq:
       - id: mixes
